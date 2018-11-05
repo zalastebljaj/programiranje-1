@@ -9,7 +9,11 @@
  - : int = 3
 [*----------------------------------------------------------------------------*)
 
-let rec penultimate_element = ()
+let rec penultimate_element xs =
+  match xs with
+  | []-> failwith "can't extract the second-to-last element form an empty list"
+  | x :: _last :: [] -> x
+  | x :: xs -> penultimate_element xs
 
 (*----------------------------------------------------------------------------*]
  Funkcija [get k list] poišče [k]-ti element v seznamu [list]. Številčenje
