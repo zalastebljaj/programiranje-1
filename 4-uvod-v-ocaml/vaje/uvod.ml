@@ -77,8 +77,13 @@ let rec divide k list =
 [*----------------------------------------------------------------------------*)
 
 let rec delete k list =
-  | [] -> []
-  | 
+  match list with
+  | [] -> failwith "List too short!"
+  | head :: tail ->
+    if k = 0 then
+      tail
+    else
+      head :: delete (k - 1) tail
 
 (*----------------------------------------------------------------------------*]
  Funkcija [slice i k list] sestavi nov seznam, ki vsebuje elemente seznama
@@ -89,7 +94,18 @@ let rec delete k list =
  - : int list = [1; 2; 3]
 [*----------------------------------------------------------------------------*)
 
-let rec slice = ()
+let rec slice i k list =
+  match list with
+  | [] -> []
+  | head :: tail ->
+    if i = 0 then
+      if k = 0 then
+        []
+      else
+        head :: slice i (k - 1) tail
+    else
+      slice (i - 1) (k - 1) tail
+
 
 (*----------------------------------------------------------------------------*]
  Funkcija [insert x k list] na [k]-to mesto seznama [list] vrine element [x].
@@ -101,7 +117,15 @@ let rec slice = ()
  - : int list = [1; 0; 0; 0; 0; 0]
 [*----------------------------------------------------------------------------*)
 
-let rec insert = ()
+let rec insert x k list =
+  match list with
+  | [] -> [x]
+  | head :: tail ->
+    if k <= 0 then
+      x :: list
+    else
+      let (l, r) = divide k list in
+      l @ [x] @ r
 
 (*----------------------------------------------------------------------------*]
  Funkcija [rotate n list] seznam zavrti za [n] mest v levo. Predpostavimo, da
@@ -114,9 +138,9 @@ let rec insert = ()
 let rec rotate n list =
   match list with
   | [] -> []
-  | n ->
+  | head :: tail ->
     let (l, r) = divide n list in
-    r :: l
+    r @ l
 
 (*----------------------------------------------------------------------------*]
  Funkcija [remove x list] iz seznama izbriše vse pojavitve elementa [x].
@@ -125,7 +149,14 @@ let rec rotate n list =
  - : int list = [2; 3; 2; 3]
 [*----------------------------------------------------------------------------*)
 
-let rec remove = ()
+let rec remove x list =
+  match list with
+  | [] -> []
+  | head :: tail ->
+    if head = x then
+      remove x tail
+    else
+      head :: remove x tail
 
 (*----------------------------------------------------------------------------*]
  Funkcija [is_palindrome] za dani seznam ugotovi ali predstavlja palindrom.
@@ -137,7 +168,16 @@ let rec remove = ()
  - : bool = false
 [*----------------------------------------------------------------------------*)
 
-let rec is_palindrome = ()
+let rec obrni list =
+  match list with
+  | [] -> []
+  | head :: tail ->
+    obrni tail @ [head]
+    
+
+let is_palindrome list =
+  list = obrni list
+      
 
 (*----------------------------------------------------------------------------*]
  Funkcija [max_on_components] sprejme dva seznama in vrne nov seznam, katerega
@@ -148,7 +188,17 @@ let rec is_palindrome = ()
  - : int list = [5; 4; 3; 3; 4]
 [*----------------------------------------------------------------------------*)
 
-let rec max_on_components = ()
+let rec max_on_components list xs =
+  match list with
+  | [] -> []
+  | head :: tail ->
+    if xs = [] then []
+    else
+      let (x :: xs) = xs in
+      if head >= x then
+        head :: max_on_components tail xs
+      else
+        x :: max_on_components tail xs
 
 (*----------------------------------------------------------------------------*]
  Funkcija [second_largest] vrne drugo največjo vrednost v seznamu. Pri tem se
@@ -160,4 +210,17 @@ let rec max_on_components = ()
  - : int = 10
 [*----------------------------------------------------------------------------*)
 
-let rec second_largest = ()
+let rec largest list =
+  match list with
+  | [y] -> y
+  | head :: tail ->
+    let (x :: xs) = tail in
+    if head >= x then
+      largest (head :: xs)
+    else
+      largest tail
+  | [] -> failwith "Nima vrednosti!"
+
+let rec second_largest list =
+  let xs = remove (largest list) list in
+  largest xs
