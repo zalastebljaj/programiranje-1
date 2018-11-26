@@ -12,15 +12,15 @@ type race = Orc | Hobbit | Human
 *)
 
 
-type school = ()
+type school = Fire | Necrotic | Angelic
 
 
-type spell = ()
+type spell = Firewall | Blaze | Resurrect | Cripple | Renounce | Banish
 
 (* Veščine [skills], ki jih je čarodej osvojil, so seznam vseh urokov,
    ki jih lahko hitro izvede. Definiraj tip `skills'. *)
 
-
+type skills = spell list
 
 (* Čarodeja opišemo z imenom, številom življenskih točk [hp], sposobnost [ability]
    ki jo predstavimo s številom točk mane, raso [race] in veščino [skills].
@@ -29,12 +29,14 @@ type spell = ()
 type mana = int
 type health = int
 
-type wizard = {name : string; }
+type wizard = {name : string; hp : health; ability : mana; race: race; skills : spell list}
 
 
 (* Napiši funkcijo ki vsakemu uroku priredi primerno šolo magije. *)
 let school_of_spell = function
-  () -> ()
+  | Firewall | Blaze -> Fire
+  | Resurrect | Cripple -> Necrotic
+  | Renounce | Banish -> Angelic
 
 (* Glede na tabelo napiši funkcijo, ki uroku priredi količino mane,
    ki jo čarodej potrebuje za izvršitev uroka:
@@ -47,7 +49,13 @@ let school_of_spell = function
 
    Namig: Lahko si pomagaš z regex-replace v Notepad++
  *)
-let mana_of_spell = failwith "todo"
+let mana_of_spell = function
+  | Firewall -> 35
+  | Blaze -> 420
+  | Resurrect -> 178
+  | Cripple -> 250
+  | Renounce -> 17
+  | Banish -> 103
 
 (* Ustvari nekaj primerov čarodejov, tako kot je prikazano na primeru Merlina.
    Ponovno si lahko pomagaš s regex-replace.*)
@@ -60,11 +68,11 @@ name : "Snoop Dogg", ability : 420,  hp : 4000,  skills : [Blaze],              
 *)
 
 (* let merlin = {name = "Merlin";   ability = 1832; hp = 9001; skills = [Renounce; Banish];  race = Human} *)
-let frodo =  failwith "todo"
-let ajitam = failwith "todo"
-let mrDuck = failwith "todo"
-let kYloReN = failwith "todo"
-let snoop_dogg = failwith "todo"
+let frodo =  {name = "Frodo";   ability = 1832; hp = 9001; skills = [Renounce; Banish];  race = Human}
+let ajitam = {name = "Ajitam";   ability = 1832; hp = 9001; skills = [Renounce; Banish];  race = Human}
+let mrDuck = {name = "mrDuck";   ability = 1832; hp = 9001; skills = [Renounce; Banish];  race = Human}
+let kYloReN = {name = "MkYloRen";   ability = 1832; hp = 9001; skills = [Renounce; Banish];  race = Human}
+let snoop_dogg = {name = "snoop_dogg";   ability = 1832; hp = 9001; skills = [Renounce; Banish];  race = Human}
 
 
 (* Napiši funkcijo, ki iz seznama čarodejev vrne čarodeja z največ mane. *)
